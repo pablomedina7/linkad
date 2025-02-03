@@ -1,0 +1,20 @@
+<h1>Gestor de Enlaces</h1>
+
+<input type="text" [(ngModel)]="filter" placeholder="Filtrar por etiquetas..." />
+
+<div *ngFor="let link of links">
+  <div (click)="navigateToDetail(link._id)">
+    <h3>{{ link.title || 'Sin título' }}</h3>
+    <p><a [href]="link.url" target="_blank">{{ link.url }}</a></p>
+    <p>Etiquetas: {{ link.tags?.join(', ') || 'Ninguna' }}</p>
+    <p>Votos: {{ link.votes || 0 }}</p>
+  </div>
+</div>
+
+<form (ngSubmit)="addLink()">
+    <input type="text" [(ngModel)]="newTitle" name="newTitle" placeholder="Título" required />
+    <input type="url" [(ngModel)]="newUrl" name="newUrl" placeholder="URL" required />
+    <input type="text" [(ngModel)]="newTags" name="newTags" placeholder="Etiquetas" />
+    <button type="submit">Agregar</button>
+  </form>
+  

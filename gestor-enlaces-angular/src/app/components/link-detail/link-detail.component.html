@@ -1,0 +1,16 @@
+<h1>{{ link?.title }}</h1>
+<p><a [href]="link?.url" target="_blank">{{ link?.url }}</a></p>
+<p>Votos: {{ link?.votes }}</p>
+<button (click)="vote(1)">Upvote +1</button>
+<button (click)="vote(-1)">Downvote -1</button>
+
+<h2>Comentarios ({{ link?.comments?.length }})</h2>
+
+<!-- Mostrar comentarios anteriores -->
+<div *ngFor="let comment of link?.comments">
+  <p>- {{ comment }}</p>
+</div>
+
+<!-- Formulario para agregar un nuevo comentario -->
+<textarea [(ngModel)]="newComment" placeholder="Nuevo comentario"></textarea>
+<button (click)="addComment()">Agregar comentario</button>

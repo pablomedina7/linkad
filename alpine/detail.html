@@ -1,0 +1,85 @@
+<!-- <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Enlace</title>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<body x-data="linkDetail()">
+    <h1>Detalle del Enlace</h1>
+    <div>
+        <h2 x-text="link.title"></h2>
+        <p><strong>URL:</strong> <a :href="link.url" target="_blank" x-text="link.url"></a></p>
+        <p><strong>Etiquetas:</strong> <span x-text="link.tags.join(', ')"></span></p>
+        <p><strong>Votos:</strong> <span x-text="link.votes"></span></p>
+        <button @click="vote(1)">Upvote</button>
+        <button @click="vote(-1)">Downvote</button>
+
+        <h3>Comentarios</h3>
+        <ul>
+            <template x-for="comment in link.comments" :key="comment">
+                <li x-text="comment"></li>
+            </template>
+        </ul>
+
+        <form @submit.prevent="addComment">
+            <label>Nuevo comentario:</label>
+            <textarea x-model="newComment" required></textarea>
+            <button type="submit">Agregar comentario</button>
+        </form>
+    </div>
+
+    <script>
+        function linkDetail() {
+            return {
+                link: {},
+                newComment: "",
+                id: new URLSearchParams(window.location.search).get('id'),
+
+                async fetchLink() {
+                    try {
+                        const response = await fetch(`http://localhost:3000/links/${this.id}`);
+                        this.link = await response.json();
+                    } catch (error) {
+                        console.error("Error al obtener el enlace:", error);
+                    }
+                },
+
+                async vote(value) {
+                    try {
+                        const response = await fetch(`http://localhost:3000/links/${this.id}/votes`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ value }),
+                        });
+                        const data = await response.json();
+                        this.link.votes = data.votes;
+                    } catch (error) {
+                        console.error("Error al votar:", error);
+                    }
+                },
+
+                async addComment() {
+                    try {
+                        const response = await fetch(`http://localhost:3000/links/${this.id}/comments`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ comment: this.newComment }),
+                        });
+                        const data = await response.json();
+                        this.link.comments = data.comments;
+                        this.newComment = "";
+                    } catch (error) {
+                        console.error("Error al agregar comentario:", error);
+                    }
+                },
+
+                init() {
+                    this.fetchLink();
+                }
+            };
+        }
+    </script>
+</body>
+</html> -->

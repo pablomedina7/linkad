@@ -1,0 +1,58 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+    text-align: center;
+  }
+  
+  header {
+    background: #0077cc;
+    color: white;
+    padding: 1rem;
+  }
+  
+  header h1 {
+    margin: 0;
+  }
+  
+  nav a {
+    color: white;
+    text-decoration: none;
+    margin-right: 1rem;
+  }
+  
+  #app {
+    padding: 1rem;
+  }
+  
+  button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #0077cc;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  .delete-comment {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 0.2rem 0.5rem;
+    margin-left: 1rem;
+    cursor: pointer;
+  }
+  .main{
+
+    background-color: rgb(209, 209, 209);
+    
+  }
+  .delete-comment:hover {
+    background-color: #cc0000;
+  }
+  .add-link-form {
+    margin-top: 1rem;
+    background-color: rgb(209, 209, 209);
+
+  }
+  

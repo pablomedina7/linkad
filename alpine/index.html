@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Enlaces</title>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<body x-data="linkManager()" x-init="init()">
+    <h1>Gestor de Enlaces</h1>
+
+    <!-- Vista de Listado de Enlaces -->
+    <div x-show="!currentId">
+        <h2>Listado de Enlaces</h2>
+        <input type="text" placeholder="Filtrar por etiquetas" x-model="filter">
+        <button @click="applyFilter">Filtrar</button>
+
+        <ul>
+            <template x-for="link in filteredLinks" :key="link._id">
+                <li>
+                    <a href="#" @click.prevent="viewDetail(link._id)"><span x-text="link.title"></span></a>
+                    <p>URL: <a :href="link.url" target="_blank" x-text="link.url"></a></p>
+                    <p>Etiquetas: <span x-text="link.tags.join(', ')"></span></p>
+                    <p>Votos: <span x-text="link.votes"></span></p>
+                </li>
+            </template>
+        </ul>
+
+        <h2>Agregar Nuevo Enlace</h2>
+        <form @submit.prevent="addLink">
+            <label>Título:</label>
+            <input type="text" x-model="newLink.title" required>
+            <label>URL:</label>
+            <input type="text" x-model="newLink.url" required>
+            <label>Etiquetas:</label>
+            <input type="text" x-model="newLink.tags">
+            <button type="submit">Agregar</button>
+        </form>
+    </div>
+
+    <!-- Vista de Detalles del Enlace -->
+    <div x-show="currentId">
+        <button @click="goBack">Volver</button>
+        <h2 x-text="selectedLink.title"></h2>
+        <p><strong>URL:</strong> <a :href="selectedLink.url" target="_blank" x-text="selectedLink.url"></a></p>
+        <p><strong>Etiquetas:</strong> <span x-text="selectedLink.tags.join(', ')"></span></p>
+        <p><strong>Votos:</strong> <span x-text="selectedLink.votes"></span></p>
+        <button @click="vote(1)">Upvote</button>
+        <button @click="vote(-1)">Downvote</button>
+
+        <h3>Comentarios</h3>
+        <ul>
+            <template x-for="comment in selectedLink.comments" :key="comment">
+                <li x-text="comment"></li>
+            </template>
+        </ul>
+
+        <form @submit.prevent="addComment">
+            <label>Nuevo comentario:</label>
+            <textarea x-model="newComment" required></textarea>
+            <button type="submit">Agregar comentario</button>
+        </form>
+    </div>
+
+    <script>
+        function linkManager() {
+            return {
+                links: [],
+                filter: '',
+                newLink: { title: '', url: '', tags: '' },
+                currentId: null,
+                selectedLink: {},
+                newComment: '',
+
+                get filteredLinks() {
+                    if (!this.filter) return this.links;
+                    return this.links.filter(link =>
+                        link.tags.some(tag => tag.toLowerCase().includes(this.filter.toLowerCase()))
+                    );
+                },
+
+                async fetchLinks() {
+                    try {
+                        const response = await fetch('http://localhost:3000/links');
+                        this.links = await response.json();
+                    } catch (error) {
+                        console.error("Error al obtener los enlaces:", error);
+                    }
+                },
+
+                async addLink() {
+                    try {
+                        const response = await fetch('http://localhost:3000/links', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                title: this.newLink.title,
+                                url: this.newLink.url,
+                                tags: this.newLink.tags.split(',').map(tag => tag.trim())
+                            }),
+                        });
+                        const newLink = await response.json();
+                        this.links.push(newLink);
+                        this.newLink = { title: '', url: '', tags: '' };
+                    } catch (error) {
+                        console.error("Error al agregar el enlace:", error);
+                    }
+                },
+
+                async viewDetail(id) {
+                    history.pushState({}, '', `/alpine/detail/${id}`);
+                    this.currentId = id;
+                    await this.fetchLink();
+                },
+
+                async fetchLink() {
+                    if (!this.currentId) return;
+                    try {
+                        const response = await fetch(`http://localhost:3000/links/${this.currentId}`);
+                        this.selectedLink = await response.json();
+                    } catch (error) {
+                        console.error("Error al obtener detalles del enlace:", error);
+                    }
+                },
+
+                goBack() {
+                    history.pushState({}, '', `/alpine`);
+                    this.currentId = null;
+                },
+
+                async vote(value) {
+                    try {
+                        const response = await fetch(`http://localhost:3000/links/${this.currentId}/votes`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ value }),
+                        });
+                        this.selectedLink.votes += value;
+                    } catch (error) {
+                        console.error("Error al votar:", error);
+                    }
+                },
+
+                async addComment() {
+                    if (!this.newComment.trim()) return;
+
+                    try {
+                        const response = await fetch(`http://localhost:3000/links/${this.currentId}/comments`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ comment: this.newComment }),
+                        });
+                        this.selectedLink.comments.push(this.newComment);
+                        this.newComment = '';
+                    } catch (error) {
+                        console.error("Error al agregar comentario:", error);
+                    }
+                },
+
+                checkUrl() {
+                    const path = window.location.pathname;
+                    const match = path.match(/\/alpine\/detail\/(.+)/);
+                    if (match) {
+                        this.currentId = match[1];
+                        this.fetchLink();
+                    } else {
+                        this.currentId = null;
+                    }
+                },
+
+                init() {
+                    this.fetchLinks();
+                    window.addEventListener('popstate', () => this.checkUrl());
+                    this.checkUrl();
+                }
+            };
+        }
+    </script>
+</body>
+</html>
