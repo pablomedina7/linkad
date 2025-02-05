@@ -12,7 +12,7 @@ import { LinkService } from '../../services/link.service';
 })
 export class HomeComponent implements OnInit {
   links: any[] = [];
-  filter: string = '';
+  filter: string = ''; // 🏷️ Filtro en tiempo real
   newTitle: string = '';
   newUrl: string = '';
   newTags: string = '';
@@ -37,9 +37,9 @@ export class HomeComponent implements OnInit {
 
   addLink() {
     if (!this.newTitle || !this.newUrl) return;
-  
+
     const tagsArray = this.newTags ? this.newTags.split(',').map(tag => tag.trim()) : [];
-  
+
     this.linkService.createLink(this.newTitle, this.newUrl, tagsArray).subscribe(
       (data) => {
         this.links.push(data);
@@ -52,8 +52,18 @@ export class HomeComponent implements OnInit {
       }
     );
   }
-  
+
   navigateToDetail(id: string) {
     this.router.navigate([`/link/${id}`]);
   }
-}
+
+  // ✅ Función para filtrar enlaces en tiempo real
+  filteredLinks() {
+    if (!this.filter) {
+      return this.links;
+    }
+    return this.links.filter(link =>
+      link.tags?.some((tag: string) => tag.toLowerCase().includes(this.filter.toLowerCase()))
+    );
+  }
+}  

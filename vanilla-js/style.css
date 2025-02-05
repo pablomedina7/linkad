@@ -42,17 +42,22 @@ body {
     margin-left: 1rem;
     cursor: pointer;
   }
-  .main{
-
-    background-color: rgb(209, 209, 209);
-    
-  }
-  .delete-comment:hover {
-    background-color: #cc0000;
-  }
   .add-link-form {
-    margin-top: 1rem;
     background-color: rgb(209, 209, 209);
-
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
   }
+  
+  .main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  #links-list {
+    width: 100%;
+    max-width: 600px;
+  }
+  
   

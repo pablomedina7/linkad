@@ -4,7 +4,7 @@ import LinkDetail from "./components/LinkDetail";
 
 function App() {
   return (
-    <div>
+    <div className="cont">
       <h1>Gestor de Enlaces</h1>
       <nav>
         <Link to="/">Inicio</Link>

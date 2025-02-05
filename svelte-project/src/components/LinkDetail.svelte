@@ -74,6 +74,22 @@
       error = `Error al comentar: ${err.message}`;
     }
   }
+
+  // ✅ Función para eliminar un comentario
+  async function deleteComment(index) {
+    try {
+      const response = await fetch(`${API_URL}/links/${id}/comments/${index}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) throw new Error('Error al eliminar el comentario');
+
+      // Actualizar la lista de comentarios después de eliminar
+      link.comments = link.comments.filter((_, i) => i !== index);
+    } catch (err) {
+      error = `Error al eliminar comentario: ${err.message}`;
+    }
+  }
 </script>
 
 <button on:click={() => push('/')}>← Volver</button>
@@ -96,15 +112,17 @@
     </a>
   </p>
 
-  <!-- ✅ Votos fuera del botón -->
   <p>Votos: {link.votes}</p>
   <button on:click={() => handleVote(1)}>Upvote +1</button>
   <button on:click={() => handleVote(-1)}>Downvote -1</button>
 
   <h2>Comentarios ({link.comments.length})</h2>
   
-  {#each link.comments as comment}
-    <div>{comment}</div>
+  {#each link.comments as comment, index}
+    <div class="comment-container">
+      <span>{comment}</span>
+      <button class="delete-button" on:click={() => deleteComment(index)}>Eliminar</button>
+    </div>
   {/each}
 
   <form on:submit={addComment}>
@@ -112,3 +130,27 @@
     <button type="submit">Agregar comentario</button>
   </form>
 {/if}
+
+<style>
+  .comment-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #131313;
+    padding: 8px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+  }
+
+  .delete-button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+  }
+
+  .delete-button:hover {
+    background-color: darkred;
+  }
+</style>

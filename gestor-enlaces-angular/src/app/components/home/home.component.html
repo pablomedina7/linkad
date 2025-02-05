@@ -1,8 +1,10 @@
 <h1>Gestor de Enlaces</h1>
 
+<!-- 🏷️ Input para el filtro en tiempo real -->
 <input type="text" [(ngModel)]="filter" placeholder="Filtrar por etiquetas..." />
 
-<div *ngFor="let link of links">
+<!-- 📌 Filtrar enlaces dinámicamente -->
+<div *ngFor="let link of filteredLinks()">
   <div (click)="navigateToDetail(link._id)">
     <h3>{{ link.title || 'Sin título' }}</h3>
     <p><a [href]="link.url" target="_blank">{{ link.url }}</a></p>
@@ -11,10 +13,10 @@
   </div>
 </div>
 
+<!-- 📝 Formulario para agregar enlaces -->
 <form (ngSubmit)="addLink()">
-    <input type="text" [(ngModel)]="newTitle" name="newTitle" placeholder="Título" required />
-    <input type="url" [(ngModel)]="newUrl" name="newUrl" placeholder="URL" required />
-    <input type="text" [(ngModel)]="newTags" name="newTags" placeholder="Etiquetas" />
-    <button type="submit">Agregar</button>
-  </form>
-  
+  <input type="text" [(ngModel)]="newTitle" name="newTitle" placeholder="Título" required />
+  <input type="url" [(ngModel)]="newUrl" name="newUrl" placeholder="URL" required />
+  <input type="text" [(ngModel)]="newTags" name="newTags" placeholder="Etiquetas" />
+  <button type="submit">Agregar</button>
+</form>

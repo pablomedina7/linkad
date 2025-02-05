@@ -89,6 +89,19 @@ function linkDetail() {
             } catch (error) {
                 console.error('Error al agregar comentario:', error);
             }
+        },
+
+        async deleteComment(index) {
+            if (!this.link._id) return;
+            try {
+                await fetch(`http://localhost:3000/links/${this.link._id}/comments/${index}`, {
+                    method: 'DELETE',
+                });
+                this.link.comments.splice(index, 1); // ✅ Actualizar la UI
+            } catch (error) {
+                console.error('Error al eliminar el comentario:', error);
+            }
         }
+        
     };
 }

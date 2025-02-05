@@ -1,5 +1,16 @@
 <template>
   <div>
+    <form @submit.prevent="addLink">
+      <h3>Agregar Nuevo Enlace</h3>
+      <label>Título:</label>
+      <input v-model="newLink.title" required />
+      <label class="url-label">URL:</label>
+      <input v-model="newLink.url" required />
+      <label>Etiquetas:</label>
+      <input v-model="newLink.tags" />
+      <button type="submit">Agregar</button>
+    </form>
+
     <h2>Listado de Enlaces</h2>
     <input type="text" v-model="filter" placeholder="Filtrar por etiquetas" />
     <button @click="filterLinks">Filtrar</button>
@@ -13,16 +24,7 @@
       </li>
     </ul>
 
-    <form @submit.prevent="addLink">
-      <h3>Agregar Nuevo Enlace</h3>
-      <label>Título:</label>
-      <input v-model="newLink.title" required />
-      <label>URL:</label>
-      <input v-model="newLink.url" required />
-      <label>Etiquetas:</label>
-      <input v-model="newLink.tags" />
-      <button type="submit">Agregar</button>
-    </form>
+    
   </div>
 </template>
 
@@ -77,4 +79,6 @@ export default {
     },
   },
 };
+
 </script>
+

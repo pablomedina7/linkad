@@ -1,6 +1,8 @@
+
 <script>
-  import Router from 'svelte-spa-router';  // ✅ CORRECTO
-  import { routes } from './routes.js';
+  //  manejo de la estructura principal y el router 
+  import Router from 'svelte-spa-router'; //navegación SPA  
+  import { routes } from './routes.js'; //se definen las rutas
 </script>
 
 <header>

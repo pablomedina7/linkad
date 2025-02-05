@@ -4,17 +4,20 @@
 
   const API_URL = 'http://localhost:3000';
 
-  let links = [];
+  let links = []; // Lista de enlaces originales
+  let filteredLinks = []; // Lista de enlaces filtrados
   let filter = '';
   let error = '';
   let newTitle = '';
   let newUrl = '';
   let newTags = '';
 
+  // Cargar enlaces desde la API cuando se monta el componente
   onMount(async () => {
     try {
       const response = await fetch(`${API_URL}/links`);
       links = await response.json();
+      filteredLinks = links; // Inicialmente, todos los enlaces están visibles
     } catch (err) {
       error = 'Error cargando enlaces';
     }
@@ -36,6 +39,7 @@
       if (response.ok) {
         const newLink = await response.json();
         links = [...links, newLink];
+        filteredLinks = links; // Actualizar lista filtrada
         newTitle = '';
         newUrl = '';
         newTags = '';
@@ -44,17 +48,27 @@
       error = 'Error al agregar el enlace';
     }
   }
+
+  // Función para aplicar el filtro en tiempo real
+  function applyFilter() {
+    if (!filter.trim()) {
+      filteredLinks = links; // Si no hay filtro, mostrar todos los enlaces
+      return;
+    }
+    filteredLinks = links.filter(link =>
+      link.tags.some(tag => tag.toLowerCase().includes(filter.toLowerCase()))
+    );
+  }
 </script>
 
 <div class="container">
-  <h1>Gestor de Enlaces</h1>
-
   <div class="filter-section">
     <input 
       type="text" 
       id="filter"
       name="filter"
       bind:value={filter} 
+      on:input={applyFilter}  
       placeholder="Filtrar por etiquetas..."
     />
   </div>
@@ -62,31 +76,6 @@
   {#if error}
     <div class="error">{error}</div>
   {/if}
-
-  <div class="link-list">
-    {#each links as link}
-    <div 
-      class="link-item"
-      role="button"
-      tabindex="0"
-      on:click={() => {
-        console.log("➡️ Navegando a:", `/link/${link._id}`);
-        push(`/link/${link._id}`);
-      }}
-      on:keydown={(e) => { if (e.key === 'Enter') push(`/link/${link._id}`); }}
-    >
-      <h3>{link.title || 'Sin título'}</h3>
-      <p class="url">
-        <a href={link.url} target="_blank">{link.url}</a> 
-      </p>
-      <div class="meta">
-        <span class="tags">Etiquetas: {link.tags?.join(', ') || 'Ninguna'}</span>
-        <span class="votes">Votos: {link.votes || 0}</span>
-      </div>
-    </div>
-  {/each}
-  
-  </div>
 
   <form on:submit|preventDefault={addLink} class="add-form">
     <h2>Agregar Nuevo Enlace</h2>
@@ -108,4 +97,29 @@
     
     <button type="submit">Agregar</button>
   </form>
+</div>
+
+<div class="link-list">
+  {#each filteredLinks as link}
+    <div 
+      class="link-item"
+      role="button"
+      tabindex="0"
+      on:click={() => {
+        console.log("➡️ Navegando a:", `/link/${link._id}`);
+        push(`/link/${link._id}`);
+      }}
+      on:keydown={(e) => { if (e.key === 'Enter') push(`/link/${link._id}`); }}
+    >
+      <h3>{link.title || 'Sin título'}</h3>
+      <p class="url">
+        <a href={link.url} target="_blank">{link.url}</a> 
+      </p>
+      <div class="meta">
+        <span class="tags">Etiquetas: {link.tags?.join(', ') || 'Ninguna'}</span>
+        <br>
+        <span class="votes">Votos: {link.votes || 0}</span>
+      </div>
+    </div>
+  {/each}
 </div>

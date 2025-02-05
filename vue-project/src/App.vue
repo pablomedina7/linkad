@@ -12,8 +12,5 @@ export default {
 </script>
 
 <style scoped>
-h1 {
-  text-align: center;
-  color: #0077cc;
-}
+
 </style>

@@ -55,7 +55,7 @@ button:focus-visible {
 }
 
 .card {
-  padding: 2em;
+  padding: 2rem;
 }
 
 #app {
@@ -64,7 +64,6 @@ button:focus-visible {
   padding: 2rem;
   text-align: center;
 }
-
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

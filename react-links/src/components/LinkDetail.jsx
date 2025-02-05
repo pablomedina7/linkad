@@ -33,6 +33,16 @@ export default function LinkDetail() {
     }
   };
 
+  const deleteComment = async (index) => {
+    try {
+    await axios.delete(`http://localhost:3000/links/${id}/comments/${index}`);
+    setLink((prevLink) => ({
+      ...prevLink,
+      comments: prevLink.comments.filter((_, i) => i !== index)
+    }))} catch (error) {
+      console.error("Error al eliminar comentario:", error);
+    }
+  }
   if (!link) return <h2>Cargando enlace...</h2>;
 
   return (
@@ -47,7 +57,12 @@ export default function LinkDetail() {
       <h3>Comentarios</h3>
       <ul>
         {link.comments.map((comment, index) => (
-          <li key={index}>{comment}</li>
+          <li key={index}>
+            {comment} 
+            <button onClick={() => deleteComment(index)} style={{ marginLeft: "10px", color: "red" }}>
+              Eliminar
+            </button>
+          </li>
         ))}
       </ul>
 

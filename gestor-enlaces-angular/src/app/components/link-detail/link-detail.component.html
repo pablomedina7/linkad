@@ -1,3 +1,5 @@
+<header>Gestor de Enlaces</header>
+<button (click)="goHome()">Inicio</button>
 <h1>{{ link?.title }}</h1>
 <p><a [href]="link?.url" target="_blank">{{ link?.url }}</a></p>
 <p>Votos: {{ link?.votes }}</p>
@@ -6,9 +8,10 @@
 
 <h2>Comentarios ({{ link?.comments?.length }})</h2>
 
-<!-- Mostrar comentarios anteriores -->
-<div *ngFor="let comment of link?.comments">
+<!-- Mostrar comentarios -->
+<div *ngFor="let comment of link?.comments; let i = index">
   <p>- {{ comment }}</p>
+  <button (click)="deleteComment(i)">Eliminar</button>
 </div>
 
 <!-- Formulario para agregar un nuevo comentario -->

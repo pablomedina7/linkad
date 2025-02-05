@@ -3,5 +3,5 @@ import LinkDetail from './components/LinkDetail.svelte';
 
 export const routes = {
   '/': Home,
-  '/link/:id': LinkDetail // ✅ Correcto
+  '/link/:id': LinkDetail // :id es un parámetro de la URL
 };

@@ -5,16 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestor de Enlaces</title>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body x-data="linkManager()" x-init="init()">
     <h1>Gestor de Enlaces</h1>
-
+    <h2>Agregar Nuevo Enlace</h2>
+    <form @submit.prevent="addLink">
+        <label>Título:</label>
+        <input type="text" x-model="newLink.title" required>
+        <label>URL:</label>
+        <input type="text" x-model="newLink.url" required>
+        <label>Etiquetas:</label>
+        <input type="text" x-model="newLink.tags">
+        <button type="submit">Agregar</button>
+    </form>
     <!-- Vista de Listado de Enlaces -->
     <div x-show="!currentId">
         <h2>Listado de Enlaces</h2>
         <input type="text" placeholder="Filtrar por etiquetas" x-model="filter">
         <button @click="applyFilter">Filtrar</button>
-
+        </section>
         <ul>
             <template x-for="link in filteredLinks" :key="link._id">
                 <li>
@@ -26,16 +37,7 @@
             </template>
         </ul>
 
-        <h2>Agregar Nuevo Enlace</h2>
-        <form @submit.prevent="addLink">
-            <label>Título:</label>
-            <input type="text" x-model="newLink.title" required>
-            <label>URL:</label>
-            <input type="text" x-model="newLink.url" required>
-            <label>Etiquetas:</label>
-            <input type="text" x-model="newLink.tags">
-            <button type="submit">Agregar</button>
-        </form>
+        
     </div>
 
     <!-- Vista de Detalles del Enlace -->
@@ -43,17 +45,22 @@
         <button @click="goBack">Volver</button>
         <h2 x-text="selectedLink.title"></h2>
         <p><strong>URL:</strong> <a :href="selectedLink.url" target="_blank" x-text="selectedLink.url"></a></p>
-        <p><strong>Etiquetas:</strong> <span x-text="selectedLink.tags.join(', ')"></span></p>
+        <p><strong>Etiquetas:</strong> <span x-text="selectedLink.tags ? selectedLink.tags.join(', ') : 'Ninguna'"></span></p>
+
         <p><strong>Votos:</strong> <span x-text="selectedLink.votes"></span></p>
         <button @click="vote(1)">Upvote</button>
         <button @click="vote(-1)">Downvote</button>
 
         <h3>Comentarios</h3>
         <ul>
-            <template x-for="comment in selectedLink.comments" :key="comment">
-                <li x-text="comment"></li>
+            <template x-for="(comment, i) in selectedLink.comments" :key="i">
+                <li>
+                    <span x-text="comment"></span>
+                    <button @click="deleteComment(i)">Eliminar</button> <!-- ✅ Ahora funcionará -->
+                </li>
             </template>
         </ul>
+        
 
         <form @submit.prevent="addComment">
             <label>Nuevo comentario:</label>
@@ -108,20 +115,27 @@
                 },
 
                 async viewDetail(id) {
-                    history.pushState({}, '', `/alpine/detail/${id}`);
-                    this.currentId = id;
-                    await this.fetchLink();
-                },
+    history.pushState({}, '', `/alpine/detail/${id}`); // ✅ Corrección en comillas
+    this.currentId = id;
+    await this.fetchLink();
+},
 
                 async fetchLink() {
-                    if (!this.currentId) return;
-                    try {
-                        const response = await fetch(`http://localhost:3000/links/${this.currentId}`);
-                        this.selectedLink = await response.json();
-                    } catch (error) {
-                        console.error("Error al obtener detalles del enlace:", error);
-                    }
-                },
+    if (!this.currentId) return;
+    try {
+        const response = await fetch(`http://localhost:3000/links/${this.currentId}`);
+        const data = await response.json();
+
+        console.log("📌 Datos obtenidos:", data); // 🔍 Depuración
+
+        // ✅ Asegurar que 'tags' no sea undefined
+        this.selectedLink = { ...data, tags: data.tags || [] };
+
+    } catch (error) {
+        console.error("Error al obtener detalles del enlace:", error);
+    }
+},
+
 
                 goBack() {
                     history.pushState({}, '', `/alpine`);
@@ -172,7 +186,19 @@
                     this.fetchLinks();
                     window.addEventListener('popstate', () => this.checkUrl());
                     this.checkUrl();
-                }
+                },
+                async deleteComment(index) { // ✅ Ahora está en el objeto correcto
+            if (this.currentId === null) return;
+            try {
+                await fetch(`http://localhost:3000/links/${this.currentId}/comments/${index}`, {
+                    method: 'DELETE',
+                });
+                // ✅ Actualiza la lista de comentarios en la interfaz
+                this.selectedLink.comments.splice(index, 1);
+            } catch (error) {
+                console.error("Error al eliminar el comentario:", error);
+            }
+        }
             };
         }
     </script>

@@ -209,5 +209,7 @@ app.use(cors({
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
   console.log(`- Vanilla JS disponible en: http://localhost:${PORT}/vanilla`);
+  console.log(`- Vue disponible en: http://localhost:${PORT}/vue`);
+  console.log(`- React disponible en: http://localhost:${PORT}/react`);
   console.log(`- Alpine disponible en: http://localhost:3000/alpine`);  // ✅ Agregado
 });
