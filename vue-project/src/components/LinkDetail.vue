@@ -1,5 +1,6 @@
 <template>
   <div v-if="link">
+    <button @click="goBack">← Volver</button>
     <h2>{{ link.title }}</h2>
     <p><strong>URL:</strong> <a :href="link.url" target="_blank">{{ link.url }}</a></p>
     <p><strong>Etiquetas:</strong> {{ link.tags.join(", ") }}</p>
@@ -7,9 +8,10 @@
     <button @click="vote(1)">Upvote</button>
     <button @click="vote(-1)">Downvote</button>
 
-    <h3>Comentarios</h3>
+    <h3>Comentarios ({{link.comments.length}})</h3>
     <ul>
-      <li v-for="(comment, index) in link.comments" :key="index">{{ comment }}</li>
+      <li v-for="(comment, index) in link.comments" :key="index">{{ comment }} <button @click="deleteComment(index)">Eliminar</button> </li>
+      
     </ul>
 
     <form @submit.prevent="addComment">
@@ -69,6 +71,18 @@ export default {
         console.error("Error al agregar comentario:", error);
         alert("Error al agregar comentario.");
       }
+    },
+    async deleteComment(index) {
+      try {
+        await axios.delete(`http://localhost:3000/links/${this.id}/comments/${index}`);
+        this.link.comments.splice(index, 1);
+      } catch (error) {
+        console.error("Error al eliminar comentario:", error);
+        alert("Error al eliminar comentario.");
+      }
+    },
+    goBack() {
+      this.$router.go(-1);  //se utiliza para volver a la ruta anterior $router es un objeto de vue router
     },
   },
 };

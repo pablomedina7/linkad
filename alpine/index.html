@@ -9,9 +9,8 @@
 </head>
 
 <body x-data="linkManager()" x-init="init()">
-    <h1>Gestor de Enlaces</h1>
     <h2>Agregar Nuevo Enlace</h2>
-    <form @submit.prevent="addLink">
+    <form @submit.prevent="addLink" class="agregar-e">
         <label>Título:</label>
         <input type="text" x-model="newLink.title" required>
         <label>URL:</label>
@@ -52,11 +51,12 @@
         <button @click="vote(-1)">Downvote</button>
 
         <h3>Comentarios</h3>
+        
         <ul>
             <template x-for="(comment, i) in selectedLink.comments" :key="i">
                 <li>
                     <span x-text="comment"></span>
-                    <button @click="deleteComment(i)">Eliminar</button> <!-- ✅ Ahora funcionará -->
+                    <button @click="deleteComment(i)">Eliminar</button> 
                 </li>
             </template>
         </ul>

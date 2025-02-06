@@ -13,14 +13,16 @@
 
     <h2>Listado de Enlaces</h2>
     <input type="text" v-model="filter" placeholder="Filtrar por etiquetas" />
+    
     <button @click="filterLinks">Filtrar</button>
     <ul>
-      <li v-for="link in filteredLinks" :key="link._id">
-        <!-- Cambiamos `href` por `router-link` para que Vue maneje la navegación -->
-        <router-link :to="'/link/' + link._id">{{ link.title }}</router-link>
+      <li v-for="link in filteredLinks" :key="link._id"> 
+        <!-- //se utiliza para iterar sobre los enlaces  -->
+        <button><router-link :to="'/link/' + link._id">{{ link.title }}</router-link></button>
         <p>URL: <a :href="link.url" target="_blank">{{ link.url }}</a></p>
         <p>Etiquetas: {{ link.tags.join(", ") }}</p>
         <p>Votos: {{ link.votes }}</p>
+        <br>
       </li>
     </ul>
 
@@ -31,7 +33,7 @@
 <script>
 import axios from "axios";
 
-export default {
+export default {//se utilizan para la comunicación con el backend
   data() {
     return {
       links: [],

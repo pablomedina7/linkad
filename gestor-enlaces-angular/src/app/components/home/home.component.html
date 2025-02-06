@@ -1,5 +1,13 @@
+<link rel="stylesheet" href="style.css">
 <h1>Gestor de Enlaces</h1>
-
+<!-- 📝 Formulario para agregar enlaces -->
+<form (ngSubmit)="addLink()">
+  <input type="text" [(ngModel)]="newTitle" name="newTitle" placeholder="Título" required />
+  <input type="url" [(ngModel)]="newUrl" name="newUrl" placeholder="URL" required />
+  <input type="text" [(ngModel)]="newTags" name="newTags" placeholder="Etiquetas" />
+  <button type="submit">Agregar</button>
+</form>
+<br>
 <!-- 🏷️ Input para el filtro en tiempo real -->
 <input type="text" [(ngModel)]="filter" placeholder="Filtrar por etiquetas..." />
 
@@ -13,10 +21,4 @@
   </div>
 </div>
 
-<!-- 📝 Formulario para agregar enlaces -->
-<form (ngSubmit)="addLink()">
-  <input type="text" [(ngModel)]="newTitle" name="newTitle" placeholder="Título" required />
-  <input type="url" [(ngModel)]="newUrl" name="newUrl" placeholder="URL" required />
-  <input type="text" [(ngModel)]="newTags" name="newTags" placeholder="Etiquetas" />
-  <button type="submit">Agregar</button>
-</form>
+

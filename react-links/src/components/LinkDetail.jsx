@@ -59,7 +59,7 @@ export default function LinkDetail() {
         {link.comments.map((comment, index) => (
           <li key={index}>
             {comment} 
-            <button onClick={() => deleteComment(index)} style={{ marginLeft: "10px", color: "red" }}>
+            <button onClick={() => deleteComment(index)} style={{ marginLeft: "10px", color: "white" }}>
               Eliminar
             </button>
           </li>

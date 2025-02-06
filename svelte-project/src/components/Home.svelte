@@ -91,7 +91,7 @@
     </label>
     
     <label for="tags">
-      Etiquetas (separadas por comas):
+      Etiquetas:
       <input type="text" id="tags" name="tags" bind:value={newTags} />
     </label>
     

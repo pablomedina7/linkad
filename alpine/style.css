@@ -114,3 +114,13 @@ section {
         max-width: 800px;
     }
 }
+
+
+.agregar-e{
+    display: flex;
+    flex-direction:row;
+    align-items: center;
+    border: 2px solid white;
+    border-radius: 5px;
+    margin: 2% 10%;
+}

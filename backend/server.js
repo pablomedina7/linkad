@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
 const mongoose = require('mongoose');
-const { error } = require('console');
+
 
 const app = express();
 const PORT = 3000;
@@ -94,7 +94,7 @@ app.post('/links/:id/votes', async (req, res) => {
   }
 });
 
-//Eliminar un comentario
+
 // Eliminar un comentario
 app.delete('/links/:id/comments/:index', async (req, res) => {
   try {
@@ -147,7 +147,7 @@ app.post('/links/:id/comments', async (req, res) => {
   }
 });
 
-// Agregar un comentario
+
 // Ruta GET /links/:id
 app.get('/links/:id', async (req, res) => {
   try {

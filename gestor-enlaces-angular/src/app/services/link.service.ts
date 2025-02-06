@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class LinkService {
-  private API_URL = 'http://localhost:3000/links'; // ✅ URL base correcta
+  private API_URL = 'http://localhost:3000/links'; // url del backend
 
   constructor(private http: HttpClient) {}
 

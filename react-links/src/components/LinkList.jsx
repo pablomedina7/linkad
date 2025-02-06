@@ -69,7 +69,7 @@ export default function LinkList() {
           required
         />
 
-        <label>Etiquetas (separadas por comas):</label>
+        <label>Etiquetas:</label>
         <input
           type="text"
           value={newLink.tags}
@@ -86,13 +86,13 @@ export default function LinkList() {
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
       />
-      <button>Filtrar</button>
+      
 
       {/* Lista de enlaces */}
       <ul>
         {filteredLinks.map((link) => (
           <li key={link._id}>
-            <Link to={`/link/${link._id}`}>{link.title}</Link>
+            <Link className="botontittle" to={`/link/${link._id}`}>{link.title}</Link>
             <p>URL: <a href={link.url} target="_blank" rel="noopener noreferrer">{link.url}</a></p>
             <p>Etiquetas: {link.tags.join(", ")}</p>
             <p>Votos: {link.votes}</p>
